@@ -12,6 +12,18 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+st.set_page_config(
+    page_title="AI SQL Analyst",
+    page_icon="📊",
+    #layout="wide"
+    initial_sidebar_state="auto",
+    menu_items={
+        'Get Help': 'https://www.extremelycoolapp.com/help',
+        'Report a bug': "https://www.extremelycoolapp.com/bug",
+        'About': "# This is a header. This is an *extremely* cool app!"
+    }
+)
+
 # ── 1. Create a sample SQLite database ───────────────
 conn = sqlite3.connect("sales.db")
 conn.executescript("""
@@ -46,14 +58,9 @@ conn.executemany("INSERT OR IGNORE INTO products VALUES (?,?,?,?)", [
 ])
 conn.commit(); conn.close()
 
-st.title(" :blue[SQL Query Agent] :sunglasses: ✨")
+st.title(" :blue[📊 SQL Query Agent] :sunglasses: ✨")
 
-st.subheader("Table")
-
-st.markdown(
-    "<span style='background-color:#508f60;color:white;padding:4px 10px;border-radius:10px;'>sales</span>",
-    unsafe_allow_html=True
-)
+st.info("SALES Table", icon="ℹ️")
 
 sales = pd.DataFrame({
     "id": [1, 2, 3, 4, 5, 6],
@@ -95,8 +102,10 @@ st.header("From English to SQL. Instantly. 😎")
 
 #toolkit[]
 
-question = st.text_area("")
-if st.button("Submit"):
+question = st.text_area(
+    "Ask a question about the sales database",
+    placeholder="Example: What is the total revenue from laptops?")
+if st.button("Run Query 🚀"):
     st.subheader("User Question:")
     st.code(question)
 
@@ -118,15 +127,18 @@ if st.button("Submit"):
     
 
         if sql_query:
-            st.subheader("Generated SQL Query:")
-            st.code(sql_query, language="sql")
+            with st.container():
+                st.divider()
+                st.subheader("Generated SQL Query")
+                st.code(sql_query, language="sql")
 
         conn = sqlite3.connect("sales.db")
         df = pd.read_sql_query(sql_query, conn)
         conn.close()
 
+        st.divider()
         st.subheader("Query Result:")
-        st.table(df)
+        st.dataframe(df, use_container_width=True)
 
         st.download_button(
             "Download CSV",
