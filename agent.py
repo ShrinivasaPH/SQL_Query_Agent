@@ -102,11 +102,10 @@ agent = create_sql_agent(
 
 st.header("From English to SQL. Instantly. 😎")
 
-
-
-st.title(" :blue[Ask anything about the table!]")
-
+#toolkit[]
+st.subheader(" :blue[Ask anything about the Table!] :sunglasses: ✨")
 question = st.text_area(
+    "User Question:"
     placeholder="Example: What is the total revenue from laptops?")
 if st.button("Run Query 🚀"):
     st.subheader("User Question:")
