@@ -46,12 +46,12 @@ conn.executemany("INSERT OR IGNORE INTO products VALUES (?,?,?,?)", [
 ])
 conn.commit(); conn.close()
 
-st.title(" :blue[SQL Query Agent] :sunglasses:")
+st.title(" :blue[SQL Query Agent] :sunglasses: ✨")
 
-st.header("Table")
+st.subheader("Table")
 
 st.markdown(
-    "<span style='background-color:#1f77b4;color:white;padding:4px 10px;border-radius:10px;'>sales</span>",
+    "<span style='background-color:#508f60;color:white;padding:4px 10px;border-radius:10px;'>sales</span>",
     unsafe_allow_html=True
 )
 
@@ -115,7 +115,7 @@ if st.button("Submit"):
                     sql_query = action.tool_input["query"]
                     break
 
-        
+    
 
         if sql_query:
             st.subheader("Generated SQL Query:")
@@ -128,5 +128,17 @@ if st.button("Submit"):
         st.subheader("Query Result:")
         st.table(df)
 
+        st.download_button(
+            "Download CSV",
+            df.to_csv(index=False),
+            file_name="query_results.csv"
+            
+        )
+        
+
         st.subheader("Answer")
         st.success(answer)
+else:
+    st.markdown(
+    "<span style='background-color:#7c9460;color:white;padding:4px 10px;border-radius:10px;'>Enter a question & Hit Submit.</span>",
+    unsafe_allow_html=True)
