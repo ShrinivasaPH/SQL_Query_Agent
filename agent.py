@@ -100,10 +100,10 @@ agent = create_sql_agent(
     agent_executor_kwargs={"return_intermediate_steps": True}
 )
 
-st.header("From English to SQL. Instantly. 😎")
+#st.header("From English to SQL. Instantly. 😎")
 
 #toolkit[]
-st.subheader(" :blue[Ask anything about the Table!] :sunglasses: ✨")
+st.subheader(" :blue[Ask anything about the Table! In Plain English!] :sunglasses: ✨")
 question = st.text_area(
     " ",
     placeholder="Example: What is the total revenue from laptops?")
