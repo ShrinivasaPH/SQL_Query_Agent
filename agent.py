@@ -59,6 +59,8 @@ conn.executemany("INSERT OR IGNORE INTO products VALUES (?,?,?,?)", [
 conn.commit(); conn.close()
 
 st.title(" :blue[📊 SQL Query Agent] :sunglasses: ✨")
+st.markdown("Developed by: [Shrinivasa PH](https://www.linkedin.com/in/shrinivasa-ph-bb96a31b5/)")
+
 
 st.info("SALES Table", icon="ℹ️")
 
