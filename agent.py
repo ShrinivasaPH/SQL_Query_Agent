@@ -121,5 +121,12 @@ if st.button("Submit"):
             st.subheader("Generated SQL Query:")
             st.code(sql_query, language="sql")
 
+        conn = sqlite3.connect("sales.db")
+        df = pd.read_sql_query(sql_query, conn)
+        conn.close()
+
+        st.subheader("Query Result:")
+        st.table(df)
+
         st.subheader("Answer")
         st.success(answer)
