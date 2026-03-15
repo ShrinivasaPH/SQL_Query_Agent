@@ -105,7 +105,7 @@ st.header("From English to SQL. Instantly. 😎")
 #toolkit[]
 st.subheader(" :blue[Ask anything about the Table!] :sunglasses: ✨")
 question = st.text_area(
-    "User Question:"
+    "User Question:",
     placeholder="Example: What is the total revenue from laptops?")
 if st.button("Run Query 🚀"):
     st.subheader("User Question:")
