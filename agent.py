@@ -5,6 +5,12 @@ from langchain_community.agent_toolkits import SQLDatabaseToolkit
 from langchain_community.agent_toolkits.sql.base import create_sql_agent
 import streamlit as st
 import pandas as pd 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # ── 1. Create a sample SQLite database ───────────────
 conn = sqlite3.connect("sales.db")
@@ -40,10 +46,19 @@ conn.executemany("INSERT OR IGNORE INTO products VALUES (?,?,?,?)", [
 ])
 conn.commit(); conn.close()
 
-st.title("SQL Query Agent")
+st.title(" :blue[SQL Query Agent] :sunglasses:")
 
-#def tables():
-#    st.title("Tables")
+st.header("Table")
+
+def tables():
+    st.title("Tables")
+
+pg = st.navigation([
+    st.Page("tables.py"),
+    #st.Page(tables)
+])
+
+pg.run()
 
 # ------
 
@@ -56,13 +71,23 @@ agent = create_sql_agent(
     llm=llm,
     toolkit=toolkit,
     verbose=True,
-    agent_type="openai-tools"
+    agent_type="openai-tools",
+    agent_executor_kwargs={"return_intermediate_steps": True}
 )
 
-# ── 3. Business questions in plain English ────────────
-questions = [
-    "Who is our top customer by total spend? Show their name and total.",
-    "Which products have stock below 15 units? I need to reorder soon.",
-    "What is the total revenue from delivered orders only?",
-    "List all customers who have ordered more than once.",
-]
+st.header("Write your question in plain English.")
+st.subheader("Get your SQL query with insights.")
+
+#toolkit[]
+
+question = st.text_area("")
+if st.button("Submit"):
+    with st.spinner("Thinking..."):
+        #st.caption("Question:", question)
+        result = agent.invoke({"input": question})
+        sql_query = result["intermediate_steps"][0][0].tool_input
+        output = {result['output']}
+        st.write(output)
+        st.write(result["intermediate_steps"][0][0])
+        st.subheader("Generated Query.")
+        st.code(sql_query, language="sql")
