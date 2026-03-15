@@ -50,15 +50,31 @@ st.title(" :blue[SQL Query Agent] :sunglasses:")
 
 st.header("Table")
 
+st.markdown(
+    "<span style='background-color:#1f77b4;color:white;padding:4px 10px;border-radius:10px;'>sales</span>",
+    unsafe_allow_html=True
+)
+
+sales = pd.DataFrame({
+    "id": [1, 2, 3, 4, 5, 6],
+    "customer": ["Rahul Sharma", "Priya Mehta", "Arjun Nair", "Rahul Sharma", "Divya Krishnan", "Vikram Rao"],
+    "product": ["Laptop", "Phone", "Tablet", "Mouse", "Laptop", "Phone"],
+    "amount": [75000, 25000, 35000, 1500, 72000, 22000],
+    "date": ["2024-01-05", "2024-01-12", "2024-01-18", "2024-01-20", "2024-01-22", "2024-01-28"],
+    "status": ["delivered", "delivered", "delivered", "delivered", "delivered", "delivered"]
+})
+
+st.table(sales)
+
 def tables():
     st.title("Tables")
 
-pg = st.navigation([
-    st.Page("tables.py"),
-    #st.Page(tables)
-])
+#pg = st.navigation([
+#    st.Page("tables.py"),
+#    #st.Page(tables)
+#])
 
-pg.run()
+#pg.run()
 
 # ------
 
@@ -75,19 +91,35 @@ agent = create_sql_agent(
     agent_executor_kwargs={"return_intermediate_steps": True}
 )
 
-st.header("Write your question in plain English.")
-st.subheader("Get your SQL query with insights.")
+st.header("From English to SQL. Instantly. 😎")
 
 #toolkit[]
 
 question = st.text_area("")
 if st.button("Submit"):
+    st.subheader("User Question:")
+    st.code(question)
+
     with st.spinner("Thinking..."):
         #st.caption("Question:", question)
         result = agent.invoke({"input": question})
-        sql_query = result["intermediate_steps"][0][0].tool_input
-        output = {result['output']}
-        st.write(output)
-        st.write(result["intermediate_steps"][0][0])
-        st.subheader("Generated Query.")
-        st.code(sql_query, language="sql")
+        answer = result["output"]
+        sql_query = None
+
+        # Extract SQL query from intermediate steps
+        for step in result["intermediate_steps"]:
+            action = step[0]
+
+            if hasattr(action, "tool_input") and isinstance(action.tool_input, dict):
+                if "query" in action.tool_input:
+                    sql_query = action.tool_input["query"]
+                    break
+
+        
+
+        if sql_query:
+            st.subheader("Generated SQL Query:")
+            st.code(sql_query, language="sql")
+
+        st.subheader("Answer")
+        st.success(answer)
