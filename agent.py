@@ -150,7 +150,7 @@ if st.button("Run Query 🚀"):
         )
         
 
-        st.subheader("Answer")
+        st.subheader("Insights! 📈")
         st.success(answer)
 else:
     st.markdown(
